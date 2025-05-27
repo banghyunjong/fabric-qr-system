@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Html5QrcodeScanner } from 'html5-qrcode';
+import { Html5Qrcode } from 'html5-qrcode';
 import axios from 'axios';
 import './QrScanner.css'; // CSS 파일도 생성
 
 const QrScanner = () => {
     const qrCodeScannerRef = useRef(null);
-    const html5QrcodeScannerRef = useRef(null);
+    const html5QrcodeRef = useRef(null);
     const [scannedResult, setScannedResult] = useState('');
     const [manualQrCodeId, setManualQrCodeId] = useState(''); 
     const [materialInfo, setMaterialInfo] = useState(null);
@@ -33,76 +33,78 @@ const QrScanner = () => {
     const handleManualSearch = () => {
         if (manualQrCodeId) {
             setScannedResult(manualQrCodeId);
-            setIsScanning(false);
-            if (html5QrcodeScannerRef.current) {
-                html5QrcodeScannerRef.current.clear().catch(e => console.error("Failed to clear scanner on manual search: ", e));
-                html5QrcodeScannerRef.current = null;
-            }
+            stopScanner();
             fetchMaterialInfo(manualQrCodeId);
         } else {
             setError("QR 코드 ID를 입력해주세요.");
         }
     };
 
-    useEffect(() => {
-        let html5QrcodeScanner;
+    const startScanner = async () => {
+        if (!qrCodeScannerRef.current) return;
 
-        const startScanner = () => {
-            if (!qrCodeScannerRef.current) return;
+        try {
+            const html5Qrcode = new Html5Qrcode(qrCodeScannerRef.current.id);
+            html5QrcodeRef.current = html5Qrcode;
 
-            if (html5QrcodeScannerRef.current) {
-                html5QrcodeScannerRef.current.clear().catch(e => console.error("Failed to clear existing scanner: ", e));
-                html5QrcodeScannerRef.current = null;
-            }
-
-            // 스캐너 설정 수정
-            const config = {
+            // 카메라 설정 수정
+            const cameraConfig = {
                 fps: 10,
                 qrbox: { width: 250, height: 250 },
                 aspectRatio: 1.0,
-                // 후면 카메라로 변경
-                videoConstraints: {
-                    facingMode: "environment"  // 'exact' 속성 제거하고 "environment"로 설정
-                },
+                disableFlip: false,
                 // 카메라 선택 UI 비활성화
                 showTorchButtonIfSupported: false,
                 showZoomSliderIfSupported: false,
                 defaultZoomValueIfSupported: 2,
-                // 권한 요청 UI 커스터마이징
-                rememberLastUsedCamera: true,
                 // 카메라 선택 UI 숨기기
                 showCameraSelectionUI: false
             };
 
-            html5QrcodeScanner = new Html5QrcodeScanner(
-                qrCodeScannerRef.current.id,
-                config,
-                false
+            // 후면 카메라 강제 사용
+            const videoConstraints = {
+                facingMode: { exact: "environment" }
+            };
+
+            await html5Qrcode.start(
+                videoConstraints,
+                cameraConfig,
+                (decodedText) => {
+                    console.log(`QR 코드 스캔 성공: ${decodedText}`);
+                    setScannedResult(decodedText);
+                    stopScanner();
+                    fetchMaterialInfo(decodedText);
+                },
+                (errorMessage) => {
+                    // 스캔 실패 시 로그 출력 (선택사항)
+                    // console.warn(`QR 코드 스캔 실패: ${errorMessage}`);
+                }
             );
 
-            const onScanSuccess = (decodedText, decodedResult) => {
-                console.log(`QR 코드 스캔 성공: ${decodedText}`);
-                setScannedResult(decodedText);
-                setIsScanning(false);
-                html5QrcodeScanner.clear();
-
-                fetchMaterialInfo(decodedText);
-            };
-
-            const onScanFailure = (errorMessage) => {
-                // console.warn(`QR 코드 스캔 실패: ${errorMessage}`);
-            };
-
-            html5QrcodeScanner.render(onScanSuccess, onScanFailure);
             setIsScanning(true);
-        };
+        } catch (err) {
+            console.error("스캐너 시작 실패:", err);
+            setError("카메라를 시작할 수 없습니다. 카메라 권한을 확인해주세요.");
+        }
+    };
 
+    const stopScanner = async () => {
+        if (html5QrcodeRef.current) {
+            try {
+                await html5QrcodeRef.current.stop();
+                html5QrcodeRef.current = null;
+                setIsScanning(false);
+            } catch (err) {
+                console.error("스캐너 중지 실패:", err);
+            }
+        }
+    };
+
+    useEffect(() => {
         startScanner();
 
         return () => {
-            if (html5QrcodeScanner) {
-                html5QrcodeScanner.clear().catch(e => console.error("Failed to clear scanner on unmount: ", e));
-            }
+            stopScanner();
         };
     }, []);
 
@@ -110,13 +112,7 @@ const QrScanner = () => {
         setScannedResult('');
         setMaterialInfo(null);
         setError(null);
-        setIsScanning(false); // 상태 초기화 후 useEffect 재실행
-        // useEffect를 재실행하기 위해 key를 변경하는 트릭을 사용할 수도 있지만,
-        // 여기서는 간단히 페이지를 새로고침하거나, 컴포넌트 자체를 다시 마운트하는 방식이 필요합니다.
-        // 현재 코드 구조상 useEffect는 한 번만 실행되므로, 스캐너 재시작 로직을 별도로 트리거해야 합니다.
-        // 가장 간단한 방법은 컴포넌트를 리렌더링하여 useEffect가 다시 실행되도록 하는 것입니다.
-        // 예를 들어, isScanning 상태를 기반으로 <QrScanner /> 컴포넌트 자체를 조건부 렌더링하는 방법
-        window.location.reload(); // 단순화를 위해 페이지 새로고침 (실제 앱에서는 권장되지 않음)
+        startScanner();
     };
 
     return (

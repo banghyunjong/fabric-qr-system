@@ -1,16 +1,10 @@
 {
-
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" }
-  ],
   "builds": [
-   
     {
       "src": "fabric-client/package.json",
       "use": "@vercel/static-build",
       "config": { "outputDirectory": "build" }
     },
-
     {
       "src": "fabric-server/api/index.js",
       "use": "@vercel/node"
@@ -22,7 +16,7 @@
       "src": "/api/(.*)",
       "dest": "fabric-server/api/index.js"
     },
- 
+
     {
       "src": "/(.*)",
       "dest": "fabric-client/build/$1"

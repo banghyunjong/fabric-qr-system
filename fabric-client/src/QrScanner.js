@@ -60,9 +60,9 @@ const QrScanner = () => {
                 fps: 10,
                 qrbox: { width: 250, height: 250 },
                 aspectRatio: 1.0,
-                // 후면 카메라만 사용하도록 설정
+                // 후면 카메라로 변경
                 videoConstraints: {
-                    facingMode: { exact: "environment" }
+                    facingMode: "environment"  // 'exact' 속성 제거하고 "environment"로 설정
                 },
                 // 카메라 선택 UI 비활성화
                 showTorchButtonIfSupported: false,

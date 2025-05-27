@@ -55,9 +55,28 @@ const QrScanner = () => {
                 html5QrcodeScannerRef.current = null;
             }
 
+            // 스캐너 설정 수정
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 250 },
+                aspectRatio: 1.0,
+                // 후면 카메라만 사용하도록 설정
+                videoConstraints: {
+                    facingMode: { exact: "environment" }
+                },
+                // 카메라 선택 UI 비활성화
+                showTorchButtonIfSupported: false,
+                showZoomSliderIfSupported: false,
+                defaultZoomValueIfSupported: 2,
+                // 권한 요청 UI 커스터마이징
+                rememberLastUsedCamera: true,
+                // 카메라 선택 UI 숨기기
+                showCameraSelectionUI: false
+            };
+
             html5QrcodeScanner = new Html5QrcodeScanner(
                 qrCodeScannerRef.current.id,
-                { fps: 10, qrbox: { width: 250, height: 250 } },
+                config,
                 false
             );
 

@@ -1,0 +1,78 @@
+.qr-scanner-container {
+    text-align: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-top: 20px;
+}
+
+#reader {
+    width: 100%;
+    max-width: 400px;
+    margin: 20px auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; /* Ensures video doesn't overflow rounded corners */
+}
+
+.scan-result-box {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.material-info-box {
+    margin-top: 15px;
+    text-align: left;
+}
+
+.material-info-box h4 {
+    color: #3498db;
+    margin-bottom: 10px;
+}
+
+.material-info-box p {
+    margin: 5px 0;
+    line-height: 1.5;
+    color: #555;
+}
+
+.material-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-top: 15px;
+    border: 1px solid #eee;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.scanning-message {
+    color: #2c3e50;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+.rescan-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.rescan-button:hover {
+    background-color: #218838;
+}

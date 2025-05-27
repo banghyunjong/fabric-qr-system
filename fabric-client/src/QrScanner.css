@@ -7,13 +7,15 @@
     margin-top: 20px;
 }
 
-#reader {
-    width: 100%;
-    max-width: 400px;
-    margin: 20px auto;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    overflow: hidden; /* Ensures video doesn't overflow rounded corners */
+/* Html5Qrcode가 생성하는 모든 UI 요소를 숨기기 */
+#reader select,
+#reader button,
+#reader a,
+#reader div.html5-qrcode-select-camera,
+#reader div.html5-qrcode-selector,
+#reader div.html5-qrcode-info,
+#reader div.html5-qrcode-button {
+    display: none !important;
 }
 
 .scan-result-box {

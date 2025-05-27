@@ -1,23 +1,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Html5Qrcode } from 'html5-qrcode';
 import axios from 'axios';
-import './QrScanner.css'; // CSS 파일도 생성
+import './QrScanner.css';
 
 const QrScanner = () => {
     const qrCodeScannerRef = useRef(null);
     const html5QrcodeRef = useRef(null);
     const [scannedResult, setScannedResult] = useState('');
-    const [manualQrCodeId, setManualQrCodeId] = useState(''); 
+    const [manualQrCodeId, setManualQrCodeId] = useState('');
     const [materialInfo, setMaterialInfo] = useState(null);
     const [error, setError] = useState(null);
-    const [isScanning, setIsScanning] = useState(false); // 스캐너 활성화 상태 관리
+    const [isScanning, setIsScanning] = useState(false);
 
-    // fetchMaterialInfo 함수를 useEffect 밖으로 이동
     const fetchMaterialInfo = async (qrCodeId) => {
-        setMaterialInfo(null); // 이전 정보 초기화
-        setError(null);       // 이전 에러 초기화
+        setMaterialInfo(null);
+        setError(null);
         try {
-            const response = await axios.get(`http://localhost:5000/api/materials/${qrCodeId}`);
+            const serverBaseUrl = process.env.REACT_APP_SERVER_BASE_URL; // Vercel 환경 변수 사용
+            const response = await axios.get(`${serverBaseUrl}/api/materials/${qrCodeId}`);
             setMaterialInfo(response.data);
             console.log("소재 정보:", response.data);
         } catch (err) {
@@ -41,50 +41,93 @@ const QrScanner = () => {
     };
 
     const startScanner = async () => {
-        if (!qrCodeScannerRef.current) return;
+        if (!qrCodeScannerRef.current) {
+            console.log("QR 스캐너 DOM 요소가 없습니다.");
+            return;
+        }
+
+        setIsScanning(true);
+        setError(null);
+
+        if (html5QrcodeRef.current) {
+            try {
+                await html5QrcodeRef.current.stop();
+            } catch (e) {
+                console.warn("Failed to stop existing scanner:", e);
+            }
+            html5QrcodeRef.current = null;
+        }
+
+        const html5QrCode = new Html5Qrcode(qrCodeScannerRef.current.id);
+        html5QrcodeRef.current = html5QrCode;
+
+        // 카메라 설정 (UI 관련 옵션 제거, core logic만 남김)
+        const qrboxConfig = { width: 250, height: 250 };
 
         try {
-            const html5Qrcode = new Html5Qrcode(qrCodeScannerRef.current.id);
-            html5QrcodeRef.current = html5Qrcode;
+            // 사용 가능한 카메라 목록 가져오기
+            const cameras = await Html5Qrcode.getCameras();
+            let cameraId = null;
 
-            // 카메라 설정 수정
-            const cameraConfig = {
-                fps: 10,
-                qrbox: { width: 250, height: 250 },
-                aspectRatio: 1.0,
-                disableFlip: false,
-                // 카메라 선택 UI 비활성화
-                showTorchButtonIfSupported: false,
-                showZoomSliderIfSupported: false,
-                defaultZoomValueIfSupported: 2,
-                // 카메라 선택 UI 숨기기
-                showCameraSelectionUI: false
-            };
+            if (cameras && cameras.length > 0) {
+                console.log("Available cameras:", cameras); // 디버깅용 로그
 
-            // 후면 카메라 강제 사용
-            const videoConstraints = {
-                facingMode: { exact: "environment" }
-            };
+                // 후면 카메라 (environment)를 우선적으로 찾기
+                // label에 'back', 'environment', 'rear' 등 키워드 포함 여부 확인
+                const rearCamera = cameras.find(camera =>
+                    camera.label.toLowerCase().includes('back') ||
+                    camera.label.toLowerCase().includes('environment') ||
+                    camera.label.toLowerCase().includes('rear')
+                );
 
-            await html5Qrcode.start(
-                videoConstraints,
-                cameraConfig,
-                (decodedText) => {
-                    console.log(`QR 코드 스캔 성공: ${decodedText}`);
-                    setScannedResult(decodedText);
-                    stopScanner();
-                    fetchMaterialInfo(decodedText);
-                },
-                (errorMessage) => {
-                    // 스캔 실패 시 로그 출력 (선택사항)
-                    // console.warn(`QR 코드 스캔 실패: ${errorMessage}`);
+                if (rearCamera) {
+                    cameraId = rearCamera.id;
+                    console.log("Selected rear camera ID:", cameraId, "Label:", rearCamera.label);
+                } else {
+                    // 후면 카메라를 명확히 찾지 못하면, 첫 번째 카메라 사용 (모바일에서 첫 번째가 후면일 가능성 높음)
+                    cameraId = cameras[0].id;
+                    console.warn("Rear camera not explicitly found, using first available camera ID:", cameraId, "Label:", cameras[0].label);
                 }
-            );
 
-            setIsScanning(true);
+                // 스캐너 시작
+                // videoConstraints를 start() 메서드의 첫 번째 인자로 직접 전달
+                // 이 방법이 facingMode를 가장 효과적으로 적용합니다.
+                await html5QrCode.start(
+                    { deviceId: { exact: cameraId } }, // 특정 카메라 ID 강제 (exact 사용)
+                    // 또는 { facingMode: { exact: "environment" } } 를 사용해도 됨
+                    // 혹은 카메라 ID를 찾지 못할 경우의 폴백으로 { facingMode: "environment" }
+                    // 현재는 찾은 cameraId를 exact로 강제하는 것이 가장 확실
+                    {
+                        fps: 10,
+                        qrbox: qrboxConfig,
+                        aspectRatio: 1.0,
+                        disableFlip: false,
+                        // Html5QrcodeScanner에만 유효한 UI 관련 옵션은 제거
+                        // showTorchButtonIfSupported: false,
+                        // showZoomSliderIfSupported: false,
+                        // defaultZoomValueIfSupported: 2,
+                        // showCameraSelectionUI: false
+                    },
+                    (decodedText) => {
+                        console.log(`QR 코드 스캔 성공: ${decodedText}`);
+                        setScannedResult(decodedText);
+                        stopScanner();
+                        fetchMaterialInfo(decodedText);
+                    },
+                    (errorMessage) => {
+                        // 스캔 실패 메시지는 계속 스캔 중이므로 콘솔에만 출력
+                        // console.warn(`QR 코드 스캔 실패: ${errorMessage}`);
+                    }
+                );
+                setIsScanning(true);
+            } else {
+                setError("사용 가능한 카메라가 없습니다.");
+                setIsScanning(false);
+            }
         } catch (err) {
             console.error("스캐너 시작 실패:", err);
             setError("카메라를 시작할 수 없습니다. 카메라 권한을 확인해주세요.");
+            setIsScanning(false);
         }
     };
 
@@ -101,18 +144,24 @@ const QrScanner = () => {
     };
 
     useEffect(() => {
-        startScanner();
+        // 컴포넌트 마운트 시 스캐너 시작
+        // 스캔 결과가 없거나 수동 입력 중이 아닐 때만 스캐너 시작
+        if (!scannedResult && !manualQrCodeId) {
+            startScanner();
+        }
 
+        // 컴포넌트 언마운트 시 스캐너 중지
         return () => {
             stopScanner();
         };
-    }, []);
+    }, [scannedResult, manualQrCodeId]); // 의존성 배열에 startScanner를 넣으면 무한 루프 가능성
 
     const handleRescan = () => {
         setScannedResult('');
         setMaterialInfo(null);
         setError(null);
-        startScanner();
+        setManualQrCodeId(''); // 재스캔 시 수동 입력값 초기화
+        startScanner(); // 스캐너 다시 시작
     };
 
     return (
@@ -121,23 +170,37 @@ const QrScanner = () => {
             <p>카메라를 QR 코드에 비춰주세요.</p>
 
             {/* QR 스캐너가 렌더링될 div */}
-            <div id="reader" ref={qrCodeScannerRef} style={{ width: "100%", maxWidth: "400px", margin: "auto" }}></div>
-            <div className="manual-input-section"> {/* <<-- 이 부분 추가 */}
-                    <h4>또는 QR 코드 ID 직접 입력</h4>
-                    <input
-                        type="text"
-                        placeholder="QR 코드 ID 입력 (예: FABRIC-ABC-001)"
-                        value={manualQrCodeId}
-                        onChange={(e) => {
-                            setManualQrCodeId(e.target.value);
-                            setError(null); // 입력 시작 시 에러 메시지 초기화
-                        }}
-                        className="qr-input-field" // CSS 클래스 추가 예정
-                    />
-                    <button onClick={handleManualSearch} className="search-button">
-                        조회
-                    </button>
-            </div>
+            {/* 스캔 결과가 없을 때만 스캐너 영역 표시 */}
+            {!scannedResult && (
+                <>
+                    <div id="reader" ref={qrCodeScannerRef} style={{ width: "100%", maxWidth: "400px", margin: "auto" }}></div>
+                    {isScanning && !error && <p className="scanning-message">QR 코드 스캔 중...</p>}
+                    {!isScanning && error && <p className="error-message">{error}</p>}
+                    {!isScanning && !error && !manualQrCodeId && <p>카메라가 시작되지 않았거나, 권한을 허용해야 합니다.</p>}
+
+                    <div className="manual-input-section">
+                        <h4>또는 QR 코드 ID 직접 입력</h4>
+                        <input
+                            type="text"
+                            placeholder="QR 코드 ID 입력 (예: FABRIC-ABC-001)"
+                            value={manualQrCodeId}
+                            onChange={(e) => {
+                                setManualQrCodeId(e.target.value);
+                                setError(null);
+                                // 수동 입력 시작 시 스캐너 중지
+                                if (html5QrcodeRef.current && isScanning) {
+                                    stopScanner(); // stopScanner 함수 호출
+                                }
+                            }}
+                            className="qr-input-field"
+                        />
+                        <button onClick={handleManualSearch} className="search-button">
+                            조회
+                        </button>
+                    </div>
+                </>
+            )}
+
             {scannedResult && (
                 <div className="scan-result-box">
                     <p><strong>스캔된 QR 코드:</strong> {scannedResult}</p>
@@ -161,8 +224,6 @@ const QrScanner = () => {
                     <button onClick={handleRescan} className="rescan-button">다시 스캔</button>
                 </div>
             )}
-            {/* 스캔 중 상태 표시 (선택 사항) */}
-            {isScanning && !scannedResult && <p className="scanning-message">QR 코드 스캔 중...</p>}
         </div>
     );
 };

@@ -94,7 +94,7 @@ const QrScanner = () => {
                 // videoConstraints를 start() 메서드의 첫 번째 인자로 직접 전달
                 // 이 방법이 facingMode를 가장 효과적으로 적용합니다.
                 await html5QrCode.start(
-                    { deviceId: { exact: cameraId } }, // 특정 카메라 ID 강제 (exact 사용)
+                    { facingMode: { exact: "environment" } }, // 특정 카메라 ID 강제 (exact 사용)
                     // 또는 { facingMode: { exact: "environment" } } 를 사용해도 됨
                     // 혹은 카메라 ID를 찾지 못할 경우의 폴백으로 { facingMode: "environment" }
                     // 현재는 찾은 cameraId를 exact로 강제하는 것이 가장 확실

@@ -17,6 +17,7 @@ const QrScanner = () => {
         setError(null);
         try {
             const serverBaseUrl = process.env.REACT_APP_SERVER_BASE_URL; // Vercel 환경 변수 사용
+            console.log("Server Base URL:", serverBaseUrl); //
             const response = await axios.get(`${serverBaseUrl}/materials/${qrCodeId}`);
             setMaterialInfo(response.data);
             console.log("소재 정보:", response.data);

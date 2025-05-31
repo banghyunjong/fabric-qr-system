@@ -7,7 +7,7 @@ const LoginPage = ({ onLoginSuccess }) => { //
   const clientId = "536017883873-a4aciifo1t8dat4cdi1vs8tkpkhjfug5.apps.googleusercontent.com"; // <<--- 여기에 발급받은 클라이언트 ID 입력!
   // 백엔드 API의 Vercel 배포 URL (fabric-client의 환경변수에서 가져오거나, 직접 설정)
   // 환경변수로 관리하는 것이 좋습니다. 예: process.env.REACT_APP_API_URL 또는 process.env.EXPO_PUBLIC_API_URL 등
-  const API_URL = "https://your-fabric-qr-api.vercel.app"; // <<-- 여기에 실제 백엔드 Vercel URL 입력!
+  const API_URL = "https://fabric-qr-api.vercel.app"; // <<-- 여기에 실제 백엔드 Vercel URL 입력!
 
   useEffect(() => { //
     // Google Identity Services 스크립트 로드
@@ -17,13 +17,13 @@ const LoginPage = ({ onLoginSuccess }) => { //
     script.defer = true; //
     document.body.appendChild(script); //
 
-    script.onload = () => { //
-      if (window.google) { //
-        window.google.accounts.id.initialize({ //
+    script.onload = () => { 
+      if (window.google) { 
+        window.google.accounts.id.initialize({ 
           client_id: clientId, //
           callback: async (response) => { // async 키워드 추가
             // Google 로그인 성공 시 콜백
-            console.log("Credential response:", response); //
+            console.log("Credential response:", response); 
 
             if (response.credential) {
               try {
@@ -50,7 +50,7 @@ const LoginPage = ({ onLoginSuccess }) => { //
                 console.log('Backend response after Google login:', res.data);
 
                 // 로그인 성공 처리
-                onLoginSuccess(); //
+                onLoginSuccess(); 
 
               } catch (error) {
                 console.error('백엔드 구글 로그인 처리 중 오류 발생:', error);
@@ -65,7 +65,7 @@ const LoginPage = ({ onLoginSuccess }) => { //
         });
 
         // Google One Tap 또는 맞춤형 버튼 사용
-        window.google.accounts.id.renderButton( //
+        window.google.accounts.id.renderButton( 
           googleButtonRef.current, //
           {
             type: "standard", // 'standard' 또는 'icon'
@@ -81,20 +81,20 @@ const LoginPage = ({ onLoginSuccess }) => { //
       }
     };
 
-    return () => { //
+    return () => { 
       // 컴포넌트 언마운트 시 스크립트 제거 (선택 사항)
-      if (script.parentNode) { //
+      if (script.parentNode) { 
         script.parentNode.removeChild(script); //
       }
     };
   }, [onLoginSuccess, clientId, API_URL]); // API_URL을 의존성 배열에 추가
 
 
-  return ( //
-    <div className="login-container"> //
-      <h2>로그인</h2> //
-      <p>소재 QR 조회 시스템에 오신 것을 환영합니다.</p> //
-      <div ref={googleButtonRef} className="google-login-button"></div> //
+  return ( 
+    <div className="login-container"> 
+      <h2>로그인</h2> 
+      <p>소재 QR 조회 시스템에 오신 것을 환영합니다.</p> 
+      <div ref={googleButtonRef} className="google-login-button"></div> 
       {/* <button onClick={() => alert('다른 로그인 방법 준비중...')}>다른 로그인</button> */} {/* */}
     </div>
   );

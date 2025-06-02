@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import './LoginPage.css'; // CSS 파일도 생성
 import axios from 'axios'; // axios 임포트 추가
 
-const LoginPage = ({ onLoginSuccess }) => { //
+const LoginPage = ({ onLoginSuccess, onNoPermission  }) => { //
   const googleButtonRef = useRef(null); //
   const clientId = "536017883873-a4aciifo1t8dat4cdi1vs8tkpkhjfug5.apps.googleusercontent.com"; // <<--- 여기에 발급받은 클라이언트 ID 입력!
   // 백엔드 API의 Vercel 배포 URL (fabric-client의 환경변수에서 가져오거나, 직접 설정)

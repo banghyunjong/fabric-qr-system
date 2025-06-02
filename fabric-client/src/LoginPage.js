@@ -49,8 +49,15 @@ const LoginPage = ({ onLoginSuccess }) => { //
 
                 console.log('Backend response after Google login:', res.data);
 
-                // 로그인 성공 처리
-                onLoginSuccess(); 
+                //canScanQr 권한 확인
+                if (res.data.user.canScanQr) { // 백엔드에서 받은 canScanQr 권한 확인
+                  console.log('QR 스캔 권한 있음. QR 스캔 화면으로 이동.');
+                  onLoginSuccess(); // 권한 있을 시 로그인 성공 처리
+                } else {
+                  console.log('QR 스캔 권한 없음.');
+                  alert('QR 스캔 권한이 없습니다. 관리자에게 문의하세요.'); // 사용자에게 알림
+                  onNoPermission(); // 권한 없을 시 처리 (예: 로그인 페이지 유지, 로컬 스토리지 클리어 등)
+                }
 
               } catch (error) {
                 console.error('백엔드 구글 로그인 처리 중 오류 발생:', error);

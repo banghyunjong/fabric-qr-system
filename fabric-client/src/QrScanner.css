@@ -5,24 +5,26 @@
     flex-direction: column;
     align-items: center;
     padding: 30px;
-    background-color: #ffffff; /* 카드 배경색 흰색 */
+    background-color: #3a404a; /* 카드 배경색, LoginPage의 login-content-box와 동일 */
     border-radius: 10px; /* 둥근 모서리 */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 대시보드 스타일의 그림자 효과 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* 더 진한 그림자 효과 */
     margin: 50px auto; /* 중앙 정렬 및 상단 여백 */
-    max-width: 650px; /* 최대 너비 제한 (스캐너와 정보 표시를 위해 약간 더 넓게) */
+    max-width: 650px; /* 최대 너비 제한 */
     width: 100%; /* 너비 100% 사용 */
     box-sizing: border-box;
+    color: #e0e0e0; /* 기본 텍스트 색상 */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 미묘한 테두리 */
   }
   
   .qr-scanner-container h3 {
-    color: #34495e; /* 대시보드 타이틀 색상 */
+    color: #61dafb; /* App.css의 .App-link 강조색 사용 */
     margin-bottom: 20px;
     font-size: 1.8em; /* 제목 크기 */
     font-weight: 600;
   }
   
   .qr-scanner-container p {
-    color: #78909c; /* 설명 텍스트 색상 */
+    color: #b0c4de; /* 설명 텍스트 색상 */
     margin-bottom: 15px;
     font-size: 1.0em;
   }
@@ -31,13 +33,13 @@
     width: 100%;
     max-width: 400px; /* 스캐너 영역 최대 너비 */
     margin: 0 auto 25px auto; /* 중앙 정렬 및 여백 */
-    border: 2px solid #3498db; /* 스캐너 테두리 색상 (대시보드 강조색) */
+    border: 2px solid #61dafb; /* 스캐너 테두리 색상 (강조색) */
     border-radius: 8px;
     overflow: hidden;
-    background-color: #eeeeee; /* 스캐너 배경색 */
+    background-color: #2e3238; /* 스캐너 내부 배경색 */
   }
   
-  /* Html5Qrcode가 생성하는 모든 UI 요소를 숨기기 - 기존과 동일하게 유지 */
+  /* Html5Qrcode가 생성하는 모든 UI 요소를 숨기기 - 기존과 동일 */
   #reader select,
   #reader button,
   #reader a,
@@ -48,7 +50,6 @@
       display: none !important;
   }
   
-  
   .scanning-message, .error-message {
     font-size: 1.1em;
     margin-top: 10px;
@@ -56,23 +57,23 @@
   }
   
   .scanning-message {
-    color: #2196f3; /* 파란색 (진행 중) */
+    color: #61dafb; /* 밝은 파랑 (진행 중) */
   }
   
   .error-message {
-    color: #dc3545; /* 빨간색 (오류) */
+    color: #ff6347; /* 밝은 주황/빨강 (오류) */
   }
   
   .manual-input-section {
     width: 100%;
     margin-top: 30px;
     padding-top: 20px;
-    border-top: 1px solid #e0e0e0; /* 옅은 구분선 */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* 옅은 구분선 */
     text-align: center;
   }
   
   .manual-input-section h4 {
-    color: #34495e;
+    color: #e0e0e0; /* 밝은 텍스트 */
     margin-bottom: 15px;
     font-size: 1.2em;
   }
@@ -81,49 +82,53 @@
     width: calc(100% - 24px); /* 패딩 및 보더 고려 */
     padding: 12px;
     margin-bottom: 15px;
-    border: 1px solid #bdc3c7; /* 입력 필드 테두리 색상 */
+    border: 1px solid #555c66; /* 입력 필드 테두리 색상 */
+    background-color: #2e3238; /* 입력 필드 배경색 */
+    color: #e0e0e0; /* 입력 텍스트 색상 */
     border-radius: 5px;
     font-size: 1em;
     box-sizing: border-box;
   }
   
   .search-button, .rescan-button {
-    background-color: #28a745; /* 대시보드에서 자주 쓰이는 녹색 버튼 */
-    color: white;
+    background-color: #61dafb; /* App.css의 강조색 사용 */
+    color: #282c34; /* 강조색 대비 어두운 텍스트 */
     border: none;
     padding: 12px 25px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1.1em;
     font-weight: 600;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease;
     width: 100%; /* 버튼 너비 100% */
     box-sizing: border-box;
   }
   
   .search-button:hover, .rescan-button:hover {
-    background-color: #218838; /* 호버 시 더 진한 녹색 */
+    background-color: #4dc2f5; /* 호버 시 약간 밝게 */
+    color: #282c34;
   }
   
   .scan-result-box {
     width: 100%;
     padding: 25px;
-    background-color: #f8f9fa; /* 결과 박스 배경색 (약간 더 밝게) */
+    background-color: #2e3238; /* 결과 박스 배경색 */
     border-radius: 8px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* 안쪽 그림자 효과 */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); /* 안쪽 그림자 효과 */
     margin-top: 30px;
     text-align: left;
-    border: 1px solid #e0e0e0; /* 테두리 추가 */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* 테두리 추가 */
+    color: #e0e0e0; /* 텍스트 색상 */
   }
   
   .material-info-box {
-    border-top: 1px solid #e0e0e0; /* 구분선 */
+    border-top: 1px solid rgba(255, 255, 255, 0.1); /* 구분선 */
     padding-top: 20px;
     margin-top: 20px;
   }
   
   .material-info-box h4 {
-    color: #3498db; /* 강조 색상 */
+    color: #61dafb; /* 강조 색상 */
     margin-bottom: 12px;
     font-size: 1.3em;
     font-weight: 600;
@@ -132,7 +137,7 @@
   .material-info-box p {
     margin-bottom: 8px;
     line-height: 1.6;
-    color: #495057; /* 내용 텍스트 색상 */
+    color: #b0c4de; /* 내용 텍스트 색상 */
   }
   
   .material-image {
@@ -141,12 +146,12 @@
     border-radius: 6px;
     margin-top: 20px;
     display: block;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* 이미지에도 그림자 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* 이미지에도 그림자 */
   }
   
   /* 로그아웃 버튼 스타일 */
   .logout-button {
-    background-color: #dc3545; /* 경고/오류 빨간색 */
+    background-color: #ff6347; /* 경고/오류 빨간색 대신 조금 더 부드러운 색상 */
     color: white;
     border: none;
     margin-top: 30px; /* 다른 요소들과 간격 */
@@ -156,10 +161,10 @@
     font-size: 1.1em;
     font-weight: 600;
     transition: background-color 0.3s ease;
-    width: 100%; /* 버튼 너비 100% */
+    width: 100%;
     box-sizing: border-box;
   }
   
   .logout-button:hover {
-    background-color: #c82333; /* 호버 시 더 어둡게 */
+    background-color: #e64a2e; /* 호버 시 더 어둡게 */
   }

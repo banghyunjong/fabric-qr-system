@@ -6,65 +6,42 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh; /* 전체 화면 높이 사용 */
-  background-color: #f0f2f5; /* 밝은 회색 배경색 (대시보드 배경색과 유사하게) */
+  background-color: #282c34; /* App.css의 .App-header 배경색과 유사하게 */
   padding: 20px;
   box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
 }
 
 /* 로그인 폼/카드 스타일 */
-.login-content-box { /* 새로운 div로 감싸거나, .login-container 자체에 스타일 적용 */
-  background-color: #ffffff; /* 카드 배경색 흰색 */
+/* QrScanner.js에서 사용된 것과 유사한 카드 스타일을 유지하면서 색상만 변경 */
+.login-content-box { /* 이 클래스를 LoginPage.js에 추가해야 합니다 */
+  background-color: #3a404a; /* 어두운 배경에 어울리는 카드 색상 */
   padding: 40px; /* 내부 여백 */
   border-radius: 10px; /* 둥근 모서리 */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 대시보드 스타일의 그림자 효과 */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* 더 진한 그림자 효과 */
   max-width: 400px; /* 최대 너비 제한 */
   width: 100%; /* 너비 100% 사용 */
   text-align: center; /* 내부 텍스트 중앙 정렬 */
+  border: 1px solid rgba(255, 255, 255, 0.1); /* 미묘한 테두리 */
 }
 
 .login-container h2 {
-  color: #34495e; /* 대시보드 타이틀에 어울리는 어두운 색상 */
+  color: #61dafb; /* App.css의 .App-link 강조색 사용 */
   margin-bottom: 20px;
   font-size: 2.2em; /* 제목 크기 키움 */
   font-weight: 700; /* 글자 굵게 */
 }
 
 .login-container p {
-  color: #607d8b; /* 부제목/설명에 어울리는 중간 회색 */
+  color: #b0c4de; /* 밝은 텍스트 색상 (배경 대비) */
   margin-bottom: 30px;
   font-size: 1.1em;
 }
 
 .google-login-button {
-  /* Google 버튼은 자체 스타일을 가집니다. */
-  /* 여기서는 버튼 주변의 여백이나 정렬만 조절할 수 있습니다. */
   margin-top: 20px;
   display: flex;
   justify-content: center; /* 버튼 중앙 정렬 */
 }
 
-
-input[type="text"], input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-button.submit-btn {
-    background-color: #2196f3; 
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1.1em;
-    width: 100%;
-    transition: background-color 0.3s ease;
-}
-
-button.submit-btn:hover {
-    background-color: #1976d2;
-}
+/* 폰트는 App.css에서 전역으로 설정하는 것이 좋습니다. */
+/* 예: body { font-family: 'Arial', sans-serif; } */

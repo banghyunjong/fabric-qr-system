@@ -21,6 +21,8 @@ function App() {
         // 로그인 시 백엔드로부터 받은 권한으로 상태 업데이트
         setHasQrScanPermission(userData.canScanQr);
         // 여기서 QR 스캔 페이지로 자동 이동하지 않고, 아래 라우팅 로직에 맡김
+        console.log("App.js handleLoginSuccess: Updated states. isLoggedIn:", true, "hasQrScanPermission:", userData.canScanQr);
+        // 상태가 업데이트되면 App 컴포넌트가 리렌더링되고, 라우팅 로직이 재평가됩니다.
       } catch (e) {
         console.error("Failed to parse user data after login success:", e);
       }
@@ -79,26 +81,47 @@ function App() {
 
   return (
     <Router>
-      <div className="App">
-        <Routes>
-          {/* 로그인 페이지 */}
-          <Route
-            path="/login"
-            element={isAuthenticated ? <Navigate to="/home" /> : <LoginPage onLoginSuccess={handleLoginSuccess} />}
-          />
-          {/* 메인 페이지 (로그인 필요) */}
-          <Route
-            path="/home"
-            element={isAuthenticated ? <HomePage onLogout={handleLogout} /> : <Navigate to="/login" />}
-          />
-          {/* 기본 경로 설정: 로그인 상태에 따라 리다이렉트 */}
-          <Route
-            path="/"
-            element={isAuthenticated ? <Navigate to="/home" /> : <Navigate to="/login" />}
-          />
-        </Routes>
-      </div>
-    </Router>
+    <div className="App">
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            (isLoggedIn && hasQrScanPermission) ? (
+              // 로그인 상태이고 QR 스캔 권한이 있으면 QR 스캔 페이지로 이동
+              console.log("Route /login 조건: true. /qr-scan으로 리다이렉트 시도."),
+              <Navigate to="/qr-scan" replace />
+            ) : (
+              // 그렇지 않으면 로그인 페이지 렌더링
+              console.log("Route /login 조건: false. LoginPage 렌더링."),
+              <LoginPage onLoginSuccess={handleLoginSuccess} onNoPermission={handleNoQrPermission} />
+            )
+          }
+        />
+        <Route
+          path="/qr-scan"
+          element={
+            <PrivateRoute>
+              <QrScanner onLogout={handleLogout} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/"
+          element={
+            (isLoggedIn && hasQrScanPermission) ? (
+              // 로그인 상태이고 QR 스캔 권한이 있으면 QR 스캔으로 이동
+              console.log("Route / 조건: true. /qr-scan으로 리다이렉트 시도."),
+              <Navigate to="/qr-scan" replace />
+            ) : (
+              // 그렇지 않으면 로그인 페이지로 이동
+              console.log("Route / 조건: false. /login으로 리다이렉트 시도."),
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+      </Routes>
+    </div>
+  </Router>
   );
 }
 

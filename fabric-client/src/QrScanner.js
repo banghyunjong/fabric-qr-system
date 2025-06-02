@@ -3,7 +3,7 @@ import { Html5Qrcode } from 'html5-qrcode';
 import axios from 'axios';
 import './QrScanner.css';
 
-const QrScanner = () => {
+const QrScanner = ({ onLogout }) => {
     const qrCodeScannerRef = useRef(null);
     const html5QrcodeRef = useRef(null);
     const [scannedResult, setScannedResult] = useState('');
@@ -225,6 +225,10 @@ const QrScanner = () => {
                     <button onClick={handleRescan} className="rescan-button">다시 스캔</button>
                 </div>
             )}
+            <button onClick={onLogout} className="logout-button" style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                로그아웃
+            </button>
+
         </div>
     );
 };

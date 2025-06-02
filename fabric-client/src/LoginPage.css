@@ -1,23 +1,70 @@
+/* fabric-client/src/LoginPage.css */
+
 .login-container {
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  }
-  
-  .login-container h2 {
-    color: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* 전체 화면 높이 사용 */
+  background-color: #f0f2f5; /* 밝은 회색 배경색 (대시보드 배경색과 유사하게) */
+  padding: 20px;
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 */
+}
+
+/* 로그인 폼/카드 스타일 */
+.login-content-box { /* 새로운 div로 감싸거나, .login-container 자체에 스타일 적용 */
+  background-color: #ffffff; /* 카드 배경색 흰색 */
+  padding: 40px; /* 내부 여백 */
+  border-radius: 10px; /* 둥근 모서리 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 대시보드 스타일의 그림자 효과 */
+  max-width: 400px; /* 최대 너비 제한 */
+  width: 100%; /* 너비 100% 사용 */
+  text-align: center; /* 내부 텍스트 중앙 정렬 */
+}
+
+.login-container h2 {
+  color: #34495e; /* 대시보드 타이틀에 어울리는 어두운 색상 */
+  margin-bottom: 20px;
+  font-size: 2.2em; /* 제목 크기 키움 */
+  font-weight: 700; /* 글자 굵게 */
+}
+
+.login-container p {
+  color: #607d8b; /* 부제목/설명에 어울리는 중간 회색 */
+  margin-bottom: 30px;
+  font-size: 1.1em;
+}
+
+.google-login-button {
+  /* Google 버튼은 자체 스타일을 가집니다. */
+  /* 여기서는 버튼 주변의 여백이나 정렬만 조절할 수 있습니다. */
+  margin-top: 20px;
+  display: flex;
+  justify-content: center; /* 버튼 중앙 정렬 */
+}
+
+
+input[type="text"], input[type="password"] {
+    width: 100%;
+    padding: 12px;
     margin-bottom: 15px;
-  }
-  
-  .login-container p {
-    color: #666;
-    margin-bottom: 25px;
-  }
-  
-  .google-login-button {
-    /* Google 버튼은 자체 스타일을 가집니다. */
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-  }
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button.submit-btn {
+    background-color: #2196f3; 
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+button.submit-btn:hover {
+    background-color: #1976d2;
+}

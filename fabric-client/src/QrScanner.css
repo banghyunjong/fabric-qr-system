@@ -1,80 +1,165 @@
+/* fabric-client/src/QrScanner.css */
+
 .qr-scanner-container {
-    text-align: center;
-    padding: 20px;
-    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    background-color: #ffffff; /* 카드 배경색 흰색 */
+    border-radius: 10px; /* 둥근 모서리 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 대시보드 스타일의 그림자 효과 */
+    margin: 50px auto; /* 중앙 정렬 및 상단 여백 */
+    max-width: 650px; /* 최대 너비 제한 (스캐너와 정보 표시를 위해 약간 더 넓게) */
+    width: 100%; /* 너비 100% 사용 */
+    box-sizing: border-box;
+  }
+  
+  .qr-scanner-container h3 {
+    color: #34495e; /* 대시보드 타이틀 색상 */
+    margin-bottom: 20px;
+    font-size: 1.8em; /* 제목 크기 */
+    font-weight: 600;
+  }
+  
+  .qr-scanner-container p {
+    color: #78909c; /* 설명 텍스트 색상 */
+    margin-bottom: 15px;
+    font-size: 1.0em;
+  }
+  
+  #reader {
+    width: 100%;
+    max-width: 400px; /* 스캐너 영역 최대 너비 */
+    margin: 0 auto 25px auto; /* 중앙 정렬 및 여백 */
+    border: 2px solid #3498db; /* 스캐너 테두리 색상 (대시보드 강조색) */
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin-top: 20px;
-}
-
-/* Html5Qrcode가 생성하는 모든 UI 요소를 숨기기 */
-#reader select,
-#reader button,
-#reader a,
-#reader div.html5-qrcode-select-camera,
-#reader div.html5-qrcode-selector,
-#reader div.html5-qrcode-info,
-#reader div.html5-qrcode-button {
-    display: none !important;
-}
-
-.scan-result-box {
-    margin-top: 30px;
-    padding: 20px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background-color: #ffffff;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.material-info-box {
-    margin-top: 15px;
-    text-align: left;
-}
-
-.material-info-box h4 {
-    color: #3498db;
-    margin-bottom: 10px;
-}
-
-.material-info-box p {
-    margin: 5px 0;
-    line-height: 1.5;
-    color: #555;
-}
-
-.material-image {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-    margin-top: 15px;
-    border: 1px solid #eee;
-}
-
-.error-message {
-    color: #e74c3c;
-    font-weight: bold;
-    margin-top: 15px;
-}
-
-.scanning-message {
-    color: #2c3e50;
-    font-style: italic;
+    overflow: hidden;
+    background-color: #eeeeee; /* 스캐너 배경색 */
+  }
+  
+  /* Html5Qrcode가 생성하는 모든 UI 요소를 숨기기 - 기존과 동일하게 유지 */
+  #reader select,
+  #reader button,
+  #reader a,
+  #reader div.html5-qrcode-select-camera,
+  #reader div.html5-qrcode-selector,
+  #reader div.html5-qrcode-info,
+  #reader div.html5-qrcode-button {
+      display: none !important;
+  }
+  
+  
+  .scanning-message, .error-message {
+    font-size: 1.1em;
     margin-top: 10px;
-}
-
-.rescan-button {
-    background-color: #28a745;
+    font-weight: 500;
+  }
+  
+  .scanning-message {
+    color: #2196f3; /* 파란색 (진행 중) */
+  }
+  
+  .error-message {
+    color: #dc3545; /* 빨간색 (오류) */
+  }
+  
+  .manual-input-section {
+    width: 100%;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0; /* 옅은 구분선 */
+    text-align: center;
+  }
+  
+  .manual-input-section h4 {
+    color: #34495e;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+  }
+  
+  .qr-input-field {
+    width: calc(100% - 24px); /* 패딩 및 보더 고려 */
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #bdc3c7; /* 입력 필드 테두리 색상 */
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box;
+  }
+  
+  .search-button, .rescan-button {
+    background-color: #28a745; /* 대시보드에서 자주 쓰이는 녹색 버튼 */
     color: white;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 25px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
+    font-size: 1.1em;
+    font-weight: 600;
     transition: background-color 0.3s ease;
-}
-
-.rescan-button:hover {
-    background-color: #218838;
-}
+    width: 100%; /* 버튼 너비 100% */
+    box-sizing: border-box;
+  }
+  
+  .search-button:hover, .rescan-button:hover {
+    background-color: #218838; /* 호버 시 더 진한 녹색 */
+  }
+  
+  .scan-result-box {
+    width: 100%;
+    padding: 25px;
+    background-color: #f8f9fa; /* 결과 박스 배경색 (약간 더 밝게) */
+    border-radius: 8px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05); /* 안쪽 그림자 효과 */
+    margin-top: 30px;
+    text-align: left;
+    border: 1px solid #e0e0e0; /* 테두리 추가 */
+  }
+  
+  .material-info-box {
+    border-top: 1px solid #e0e0e0; /* 구분선 */
+    padding-top: 20px;
+    margin-top: 20px;
+  }
+  
+  .material-info-box h4 {
+    color: #3498db; /* 강조 색상 */
+    margin-bottom: 12px;
+    font-size: 1.3em;
+    font-weight: 600;
+  }
+  
+  .material-info-box p {
+    margin-bottom: 8px;
+    line-height: 1.6;
+    color: #495057; /* 내용 텍스트 색상 */
+  }
+  
+  .material-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin-top: 20px;
+    display: block;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* 이미지에도 그림자 */
+  }
+  
+  /* 로그아웃 버튼 스타일 */
+  .logout-button {
+    background-color: #dc3545; /* 경고/오류 빨간색 */
+    color: white;
+    border: none;
+    margin-top: 30px; /* 다른 요소들과 간격 */
+    padding: 12px 25px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    width: 100%; /* 버튼 너비 100% */
+    box-sizing: border-box;
+  }
+  
+  .logout-button:hover {
+    background-color: #c82333; /* 호버 시 더 어둡게 */
+  }
